@@ -23,15 +23,26 @@ const formatDate = function(date){
     if(minute<10){
         minute='0'+minute;
     }
-    return `${month} ${date.getDate()}${nth(date.getDate())}, ${date.getFullYear()} at ${hour}:${minute} ${amPm}`;
+    return `${month} ${date.getDate()}${daySuffix(date.getDate())}, ${date.getFullYear()} at ${hour}:${minute} ${amPm}`;
 }
-const nth = (d) => {
-    if (d > 3 && d < 21) return 'th';
-    switch (d % 10) {
-      case 1:  return "st";
-      case 2:  return "nd";
-      case 3:  return "rd";
-      default: return "th";
+const daySuffix = (day) => {
+    // 1st, 21st, 31st
+    // 2nd, 22nd
+    // 3rd, 23rd
+    // evrything else is th
+    switch (day) {
+        case 1:
+        case 21:
+        case 31:
+            return "st";
+        case 2:
+        case 22:
+            return "nd";
+        case 3:
+        case 23:
+            return "rd";
+        default:
+            return "th";
     }
 };
 module.exports = {formatDate};
