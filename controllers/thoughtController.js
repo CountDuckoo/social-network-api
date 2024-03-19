@@ -68,6 +68,16 @@ module.exports = {
             if (!thought){
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
+
+            const user = await User.findOneAndUpdate(
+                {thoughts: req.params.thoughtId},
+                {$pull: {thoughts: req.params.thoughtId}},
+                {new: true}
+            );
+            if (!user) {
+                return res.status(404).json({ message: 'Thought deleted but no user with that ID' });
+            }
+
             res.json(thought);
         } catch (error) {
             res.status(500).json(error);
@@ -81,12 +91,11 @@ module.exports = {
                 { $addToSet: { reactions: req.body } },
                 { runValidators: true, new: true }
             );
-        
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
-        
-            res.json(video);
+            
+            res.json(thought);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -99,12 +108,11 @@ module.exports = {
                 { $pull: { reactions: {reactionId: req.params.reactionId}} },
                 { runValidators: true, new: true }
             );
-        
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
         
-            res.json(video);
+            res.json(thought);
         } catch (error) {
             res.status(500).json(error);
         }
